@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bloc 2 — Force · Puissance · Laurent</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0e11;
+  --card: #16161a;
+  --card2: #1c1c22;
+  --border: #26262f;
+  --border2: #32323e;
+  --text: #ededf0;
+  --muted: #5a5a6e;
+  --faint: #2a2a35;
+
+  --force: #f5a623;
+  --puissance: #e8425a;
+  --hypertrophie: #7b6ef6;
+  --renfo: #3ecfb2;
+  --cross: #e8425a;
+  --mob: #4a9eff;
+
+  --input-bg: #0a0a0e;
+  --lime: #b8f53a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.topbar-session {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lime);
+  letter-spacing: 1px;
+}
+
+/* ── WEEK / SESSION NAV ── */
+.nav-weeks {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-weeks::-webkit-scrollbar { display: none; }
+
+.week-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  border-radius: 2px;
+}
+.week-btn:hover { color: var(--text); border-color: var(--border2); }
+.week-btn.active { background: var(--lime); color: #0e0e11; border-color: var(--lime); font-weight: 700; }
+
+.nav-sessions {
+  display: flex;
+  gap: 4px;
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sess-btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 2px;
+  flex: 1;
+  text-align: center;
+}
+.sess-btn:hover { color: var(--text); }
+.sess-btn.active { background: var(--card2); color: var(--text); border-color: var(--border2); }
+
+/* ── PANELS ── */
+.panel { display: none; padding: 16px 16px 120px; }
+.panel.active { display: block; animation: fadeIn 0.15s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:none; } }
+
+/* ── BLOC HEADER ── */
+.bloc-header {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.bloc-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.bloc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.bloc-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── SECTION ── */
+.section { margin-bottom: 10px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--card);
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-force { background: var(--force); }
+.dot-puissance { background: var(--puissance); }
+.dot-hypertrophie { background: var(--hypertrophie); }
+.dot-renfo { background: var(--renfo); }
+.dot-cross { background: var(--cross); }
+.dot-mob { background: var(--mob); }
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: 1;
+}
+
+.section-chevron { font-size: 12px; color: var(--faint); transition: transform 0.2s; }
+.section.open .section-chevron { transform: rotate(180deg); color: var(--lime); }
+
+.section-body { display: none; background: var(--card2); }
+.section.open .section-body { display: block; }
+
+/* ── EXERCISE ROW ── */
+.ex {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ex:last-child { border-bottom: none; }
+
+.ex-left { flex: 1; min-width: 0; }
+
+.ex-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.ex-name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--border2);
+  transition: all 0.1s;
+}
+.ex-name a:hover { color: var(--lime); border-color: var(--lime); }
+
+.ex-sets {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ex-target {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--force);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.ex-super {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--puissance);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* ── INPUT BLOCK ── */
+.ex-input-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.input-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.perf-input {
+  width: 80px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--lime);
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: right;
+  padding: 6px 8px;
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+.perf-input::-webkit-inner-spin-button, .perf-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.perf-input::placeholder { color: var(--faint); font-size: 12px; font-weight: 400; }
+.perf-input:focus { border-color: var(--lime); background: #0d0d12; }
+.perf-input.has-val { border-color: rgba(184,245,58,0.25); }
+
+.time-input {
+  width: 80px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--puissance);
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: right;
+  padding: 6px 8px;
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.15s;
+}
+.time-input::placeholder { color: var(--faint); font-size: 11px; font-weight: 400; }
+.time-input:focus { border-color: var(--puissance); }
+.time-input.has-val { border-color: rgba(232,66,90,0.25); }
+
+/* ── ISO ISO-max note ── */
+.iso-note {
+  background: rgba(245,166,35,0.06);
+  border: 1px solid rgba(245,166,35,0.15);
+  border-left: 3px solid var(--force);
+  padding: 8px 12px;
+  margin: 0 14px 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--force);
+  line-height: 1.5;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── TARGET CHIP ── */
+.target-chip {
+  display: inline-block;
+  background: rgba(245,166,35,0.1);
+  border: 1px solid rgba(245,166,35,0.2);
+  color: var(--force);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-top: 3px;
+}
+
+.target-chip.blue { background: rgba(123,110,246,0.1); border-color: rgba(123,110,246,0.2); color: var(--hypertrophie); }
+
+/* ── CROSS BLOCK ── */
+.cross-block {
+  padding: 12px 14px;
+}
+
+.cross-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--puissance);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.cross-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cross-row:last-child { border-bottom: none; }
+
+.cross-ex { flex: 1; font-size: 13px; color: var(--text); font-weight: 500; }
+.cross-vol { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
+
+/* ── PERF NOTE ── */
+.perf-note-block { padding: 10px 14px; border-top: 1px solid var(--border); }
+.perf-note {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  padding: 8px 10px;
+  resize: none;
+  outline: none;
+  border-radius: 2px;
+  line-height: 1.5;
+  min-height: 52px;
+}
+.perf-note::placeholder { color: var(--muted); font-size: 12px; }
+.perf-note:focus { border-color: var(--border2); }
+
+/* ── SUIVI PANEL ── */
+.suivi-intro {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.suivi-section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.suivi-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.suivi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.suivi-card-name {
+  padding: 10px 14px 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+}
+
+.suivi-rows { display: grid; grid-template-columns: repeat(4,1fr); }
+
+.suivi-cell {
+  padding: 8px 10px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.suivi-cell:last-child { border-right: none; }
+
+.suivi-cell-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.suivi-cell-val {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--lime);
+  min-height: 22px;
+}
+
+.suivi-cell-val.empty { color: var(--faint); font-size: 11px; font-weight: 400; }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 680px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 100;
+}
+
+.btn {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+
+.btn-save { background: var(--lime); color: #0e0e11; }
+.btn-save:hover { background: #caf85c; }
+.btn-export { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-export:hover { color: var(--text); border-color: var(--text); }
+.btn-import { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-import:hover { color: var(--text); border-color: var(--text); }
+
+.save-indicator {
+  margin-left: auto;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.save-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--faint); transition: background 0.3s; }
+.save-dot.saved { background: var(--lime); }
+
+/* ── PROGRESSION NOTE ── */
+.prog-note {
+  background: rgba(184,245,58,0.05);
+  border: 1px solid rgba(184,245,58,0.12);
+  border-left: 3px solid var(--lime);
+  padding: 10px 14px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.prog-note strong { color: var(--lime); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">Bloc 2 · Force — Puissance</div>
+  <div class="topbar-session" id="top-session-label">S1 · J1</div>
+</div>
+<div style="padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+  <div style="display:flex;flex-direction:column;gap:1px;">
+    <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Athlète</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--text);">Laurent Trescasa</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:1px;align-items:flex-end;">
+    <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Coach</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--lime);">Jordan Stefani</div>
+  </div>
+</div>
+
+<div class="nav-weeks" id="nav-weeks">
+  <button class="week-btn active" onclick="setWeek(1,this)">Sem. 1</button>
+  <button class="week-btn" onclick="setWeek(2,this)">Sem. 2</button>
+  <button class="week-btn" onclick="setWeek(3,this)">Sem. 3</button>
+  <button class="week-btn" onclick="setWeek(4,this)">Sem. 4</button>
+  <button class="week-btn" onclick="setWeek(0,this)" style="color:var(--hypertrophie);border-color:rgba(123,110,246,0.3)">Suivi</button>
+</div>
+
+<div class="nav-sessions" id="nav-sessions">
+  <button class="sess-btn active" onclick="setSession(1,this)">Séance 1 · Bas du corps</button>
+  <button class="sess-btn" onclick="setSession(2,this)">Séance 2 · Haut du corps</button>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PANELS : w[1-4]-s[1-2]   +   suivi (w0)
+════════════════════════════════════════════ -->
+
+<!-- ─── S1 J1 ─── -->
+<div class="panel active" id="p-w1-s1">
+  <div class="prog-note"><strong>+2.5% / semaine sur tous les exercices de force.</strong> Les fourchettes ci-dessous sont calculées à partir de tes 3RM du Bloc 1.</div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-mob"></div>
+      <span class="section-label">Mobilité &amp; Prévention</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Dos rond / Dos creux</div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/QWwiOHexU8I?si=CaLdIaOhMtTpXpr_" target="_blank">Rotation thoracique ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/AcrACFcaLZk?si=-gFMbpCioxbTU4iq" target="_blank">Fentes ouverture buste ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/xwiEUeqfa6U?si=hW4uKiyGMrwad59q" target="_blank">Jefferson curl ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/_AOxb-7uwEE?si=aqVkY2IOJsxOou6T" target="_blank">Yoga push-up ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/LUKjQ-FxNrM?si=Csj7U1PQBljbqevJ" target="_blank">Squat ouverture ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/cwQGnzB32Og?si=gOi31BPDtmHs6ehi" target="_blank">Swimmer ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/7vJKlzAiXN4?si=__MWZ3cgE2b-qTen" target="_blank">Superman press ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/hgFxm5KIF7M?si=J3xUyjqgCDfvA_jh" target="_blank">Spanish squat ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/_EgyfPGEsrw?si=Yzlxwpv2527fQUUB" target="_blank">Side step w/ miniband ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/QdV14umB_nM?si=VKwL2EadHyYZ1GoG" target="_blank">Hamstrings flutter kicks ↗</a></div><div class="ex-sets">1 × 20''</div></div></div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-force"></div>
+      <span class="section-label">Force</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/ZR-TXOWNJsg?si=k-ADCMQFYTRfqUe4" target="_blank">Back squat iso max ↗</a></div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">Back squat</div>
+          <div class="ex-sets">5 × 5 — vise le 5RM sur les 3 dernières séries</div>
+          <div class="target-chip">Cible S1 : 104–108 kg</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s1-backsquat" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">Bulgarian Split squat</div>
+          <div class="ex-sets">3 × 5+5 — 5RM</div>
+          <div class="target-chip">Cible S1 : ~30–35 kg</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s1-bulgarian" min="0" step="2.5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-puissance"></div>
+      <span class="section-label">Puissance</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset</div>
+          <div class="ex-name">a) Deadlift</div>
+          <div class="ex-sets">3 × 6 — 85–90% RM</div>
+          <div class="target-chip">Cible S1 : 130–138 kg</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s1-deadlift" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset</div>
+          <div class="ex-name">b) DB squat jump</div>
+          <div class="ex-sets">3 × 6 — explosif</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s1-squatjump" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name"><a href="https://youtu.be/TqOP69uQIxk?si=CrG85t7IwivaFkwT" target="_blank">Landmine lunges to knee up ↗</a></div>
+          <div class="ex-sets">3 × 6+6</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s1-landmine" min="0" step="2.5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-renfo"></div>
+      <span class="section-label">Renfo</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset</div>
+          <div class="ex-name">a) Calf extension</div>
+          <div class="ex-sets">3 × 10</div>
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset</div>
+          <div class="ex-name">b) Copenhagen plank</div>
+          <div class="ex-sets">3 × 10+10</div>
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">OH sit up on GHD</div>
+          <div class="ex-sets">3 × 10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-mob"></div>
+      <span class="section-label">Notes de séance</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="perf-note-block">
+        <textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w1s1-notes" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── S1 J2 ─── -->
+<div class="panel" id="p-w1-s2">
+  <div class="prog-note"><strong>+2.5% / semaine sur tous les exercices de force.</strong> Les fourchettes ci-dessous sont calculées à partir de tes 3RM du Bloc 1.</div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-mob"></div>
+      <span class="section-label">Mobilité &amp; Prévention</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Dos rond / Dos creux</div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/QWwiOHexU8I?si=CaLdIaOhMtTpXpr_" target="_blank">Rotation thoracique ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/AcrACFcaLZk?si=-gFMbpCioxbTU4iq" target="_blank">Fentes ouverture buste ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/xwiEUeqfa6U?si=hW4uKiyGMrwad59q" target="_blank">Jefferson curl ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/_AOxb-7uwEE?si=aqVkY2IOJsxOou6T" target="_blank">Yoga push-up ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/LUKjQ-FxNrM?si=Csj7U1PQBljbqevJ" target="_blank">Squat ouverture ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/cwQGnzB32Og?si=gOi31BPDtmHs6ehi" target="_blank">Swimmer ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/7vJKlzAiXN4?si=__MWZ3cgE2b-qTen" target="_blank">Superman press ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/hgFxm5KIF7M?si=J3xUyjqgCDfvA_jh" target="_blank">Spanish squat ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/_EgyfPGEsrw?si=Yzlxwpv2527fQUUB" target="_blank">Side step w/ miniband ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/QdV14umB_nM?si=VKwL2EadHyYZ1GoG" target="_blank">Hamstrings flutter kicks ↗</a></div><div class="ex-sets">1 × 20''</div></div></div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-force"></div>
+      <span class="section-label">Force</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press iso max</div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">Bench press</div>
+          <div class="ex-sets">4 × 5</div>
+          <div class="target-chip">Cible S1 : 85–90 kg</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-benchpress" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">Shoulder press</div>
+          <div class="ex-sets">4 × 5</div>
+          <div class="target-chip">Cible S1 : 57–60 kg</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg réel</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-shoulderpress" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-name">Tractions</div>
+          <div class="ex-sets">4 × 5</div>
+          <div class="target-chip">Cible S1 : 10–12 kg lest</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg lest</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-tractions" min="0" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-hypertrophie"></div>
+      <span class="section-label">Hypertrophie</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset A</div>
+          <div class="ex-name">a) Rowing poulie basse</div>
+          <div class="ex-sets">3 × 12</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-rowing" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset A</div>
+          <div class="ex-name">b) Curl pupitre</div>
+          <div class="ex-sets">3 × 12</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-curl" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset B</div>
+          <div class="ex-name"><a href="https://youtu.be/tXv-rEa5xn8?si=hxlJEdlY8BEYYiG-" target="_blank">a) DB floor press ↗</a></div>
+          <div class="ex-sets">3 × 12</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-dbfloor" min="0" step="2.5">
+        </div>
+      </div>
+      <div class="ex">
+        <div class="ex-left">
+          <div class="ex-super">Superset B</div>
+          <div class="ex-name"><a href="https://youtube.com/shorts/6KyyBKKG7y0?si=Jo4_abKlMBb0RkcB" target="_blank">b) DB triceps ext. banc incliné ↗</a></div>
+          <div class="ex-sets">3 × 12</div>
+        </div>
+        <div class="ex-input-block">
+          <div class="input-label">kg</div>
+          <input type="number" class="perf-input" placeholder="—" data-key="w1s2-triceps" min="0" step="2.5">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-cross"></div>
+      <span class="section-label">Cross Training · For Time</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="cross-block">
+        <div class="cross-title">For Time</div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">150 m</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtu.be/0RuPWHG-ju4?si=rntGVQZ66An5VyuQ" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Hang muscle snatch ↗</a></div><div class="cross-vol">× 20</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtube.com/shorts/hlT2tuPr-eg?si=vRp85-b67ZUyWGic" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Biceps carry ↗</a></div><div class="cross-vol">50 m</div></div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">250 m</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtu.be/0RuPWHG-ju4?si=rntGVQZ66An5VyuQ" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Hang muscle snatch ↗</a></div><div class="cross-vol">× 20</div></div>
+        <div class="cross-row"><div class="cross-ex">Farmer carry</div><div class="cross-vol">50 m</div></div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">350 m</div></div>
+      </div>
+      <div class="perf-note-block" style="border-top:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;">Temps total</div>
+        <input type="text" class="time-input" placeholder="mm:ss" data-key="w1s2-cross-time" style="width:80px;">
+      </div>
+    </div>
+  </div>
+
+  <div class="section open">
+    <div class="section-header" onclick="tog(this)">
+      <div class="section-dot dot-mob"></div>
+      <span class="section-label">Notes de séance</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="perf-note-block">
+        <textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w1s2-notes" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── S2 J1 ─── -->
+<div class="panel" id="p-w2-s1">
+  <div class="prog-note"><strong>Semaine 2 · +2.5% vs S1.</strong> Augmente les charges de force de ~2.5 kg par rapport à la semaine précédente.</div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Mobilité &amp; Prévention</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Dos rond / Dos creux</div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/QWwiOHexU8I?si=CaLdIaOhMtTpXpr_" target="_blank">Rotation thoracique ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/AcrACFcaLZk?si=-gFMbpCioxbTU4iq" target="_blank">Fentes ouverture buste ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/xwiEUeqfa6U?si=hW4uKiyGMrwad59q" target="_blank">Jefferson curl ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/_AOxb-7uwEE?si=aqVkY2IOJsxOou6T" target="_blank">Yoga push-up ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/LUKjQ-FxNrM?si=Csj7U1PQBljbqevJ" target="_blank">Squat ouverture ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/cwQGnzB32Og?si=gOi31BPDtmHs6ehi" target="_blank">Swimmer ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/7vJKlzAiXN4?si=__MWZ3cgE2b-qTen" target="_blank">Superman press ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/hgFxm5KIF7M?si=J3xUyjqgCDfvA_jh" target="_blank">Spanish squat ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/_EgyfPGEsrw?si=Yzlxwpv2527fQUUB" target="_blank">Side step w/ miniband ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/QdV14umB_nM?si=VKwL2EadHyYZ1GoG" target="_blank">Hamstrings flutter kicks ↗</a></div><div class="ex-sets">1 × 20''</div></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/ZR-TXOWNJsg?si=k-ADCMQFYTRfqUe4" target="_blank">Back squat iso max ↗</a></div><div class="ex-sets">3 × 6''</div></div></div>
+    <div class="ex">
+        <div class="ex-left"><div class="ex-name">Back squat</div><div class="ex-sets">5 × 5</div><div class="target-chip">Cible S2 : 107–111 kg</div></div>
+        <div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s1-backsquat" min="0" step="2.5"></div>
+      </div>
+      <div class="ex">
+        <div class="ex-left"><div class="ex-name">Bulgarian Split squat</div><div class="ex-sets">3 × 5+5 — 5RM</div><div class="target-chip">Cible S2 : +2.5 kg vs S1</div></div>
+        <div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s1-bulgarian" min="0" step="2.5"></div>
+      </div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-puissance"></div><span class="section-label">Puissance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex">
+        <div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Deadlift</div><div class="ex-sets">3 × 6 — 85–90% RM</div><div class="target-chip">Cible S2 : 133–141 kg</div></div>
+        <div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s1-deadlift" min="0" step="2.5"></div>
+      </div>
+      <div class="ex">
+        <div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) DB squat jump</div><div class="ex-sets">3 × 6 — explosif</div></div>
+        <div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s1-squatjump" min="0" step="2.5"></div>
+      </div>
+      <div class="ex">
+        <div class="ex-left"><div class="ex-name"><a href="https://youtu.be/TqOP69uQIxk?si=CrG85t7IwivaFkwT" target="_blank">Landmine lunges to knee up ↗</a></div><div class="ex-sets">3 × 6+6</div></div>
+        <div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s1-landmine" min="0" step="2.5"></div>
+      </div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-renfo"></div><span class="section-label">Renfo</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Calf extension</div><div class="ex-sets">3 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) Copenhagen plank</div><div class="ex-sets">3 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">OH sit up on GHD</div><div class="ex-sets">3 × 10</div></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w2s1-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── S2 J2 ─── -->
+<div class="panel" id="p-w2-s2">
+  <div class="prog-note"><strong>Semaine 2 · +2.5% vs S1.</strong></div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Mobilité &amp; Prévention</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Dos rond / Dos creux</div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/QWwiOHexU8I" target="_blank">Rotation thoracique ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/AcrACFcaLZk" target="_blank">Fentes ouverture buste ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/xwiEUeqfa6U" target="_blank">Jefferson curl ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/_AOxb-7uwEE" target="_blank">Yoga push-up ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/LUKjQ-FxNrM" target="_blank">Squat ouverture ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/cwQGnzB32Og" target="_blank">Swimmer ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/7vJKlzAiXN4" target="_blank">Superman press ↗</a></div><div class="ex-sets">1 × 20</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/hgFxm5KIF7M" target="_blank">Spanish squat ↗</a></div><div class="ex-sets">1 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/_EgyfPGEsrw" target="_blank">Side step w/ miniband ↗</a></div><div class="ex-sets">1 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/QdV14umB_nM" target="_blank">Hamstrings flutter kicks ↗</a></div><div class="ex-sets">1 × 20''</div></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press iso max</div><div class="ex-sets">3 × 6''</div></div></div>
+    <div class="ex"><div class="ex-left"><div class="ex-name">Bench press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S2 : 87–92 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-benchpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Shoulder press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S2 : 59–62 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-shoulderpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Tractions</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S2 : 11–13 kg lest</div></div><div class="ex-input-block"><div class="input-label">kg lest</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-tractions" min="0" step="1"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-hypertrophie"></div><span class="section-label">Hypertrophie</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">a) Rowing poulie basse</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-rowing" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">b) Curl pupitre</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-curl" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name"><a href="https://youtu.be/tXv-rEa5xn8" target="_blank">a) DB floor press ↗</a></div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-dbfloor" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name"><a href="https://youtube.com/shorts/6KyyBKKG7y0" target="_blank">b) DB triceps ext. banc incliné ↗</a></div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w2s2-triceps" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-cross"></div><span class="section-label">Cross Training · For Time</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="cross-block">
+        <div class="cross-title">For Time</div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">150 m</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtu.be/0RuPWHG-ju4" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Hang muscle snatch ↗</a></div><div class="cross-vol">× 20</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtube.com/shorts/hlT2tuPr-eg" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Biceps carry ↗</a></div><div class="cross-vol">50 m</div></div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">250 m</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtu.be/0RuPWHG-ju4" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">Hang muscle snatch ↗</a></div><div class="cross-vol">× 20</div></div>
+        <div class="cross-row"><div class="cross-ex">Farmer carry</div><div class="cross-vol">50 m</div></div>
+        <div class="cross-row"><div class="cross-ex">Skierg</div><div class="cross-vol">350 m</div></div>
+      </div>
+      <div class="perf-note-block" style="border-top:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;">Temps total</div>
+        <input type="text" class="time-input" placeholder="mm:ss" data-key="w2s2-cross-time" style="width:80px;">
+      </div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w2s2-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── S3 J1 ─── -->
+<div class="panel" id="p-w3-s1">
+  <div class="prog-note"><strong>Semaine 3 · +5% vs S1.</strong></div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/ZR-TXOWNJsg?si=k-ADCMQFYTRfqUe4" target="_blank">Back squat iso max ↗</a></div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Back squat</div><div class="ex-sets">5 × 5</div><div class="target-chip">Cible S3 : 110–115 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s1-backsquat" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bulgarian Split squat</div><div class="ex-sets">3 × 5+5 — 5RM</div><div class="target-chip">Cible S3 : +5% vs S1</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s1-bulgarian" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-puissance"></div><span class="section-label">Puissance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Deadlift</div><div class="ex-sets">3 × 6 — 85–90% RM</div><div class="target-chip">Cible S3 : 136–145 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s1-deadlift" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) DB squat jump</div><div class="ex-sets">3 × 6</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s1-squatjump" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/TqOP69uQIxk" target="_blank">Landmine lunges to knee up ↗</a></div><div class="ex-sets">3 × 6+6</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s1-landmine" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-renfo"></div><span class="section-label">Renfo</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Calf extension</div><div class="ex-sets">3 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) Copenhagen plank</div><div class="ex-sets">3 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">OH sit up on GHD</div><div class="ex-sets">3 × 10</div></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w3s1-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── S3 J2 ─── -->
+<div class="panel" id="p-w3-s2">
+  <div class="prog-note"><strong>Semaine 3 · +5% vs S1.</strong> Hypertrophie différente : rowing pronation + spider curl + épaules alternées.</div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press iso max</div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S3 : 89–95 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-benchpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Shoulder press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S3 : 61–64 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-shoulderpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Tractions</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S3 : 12–14 kg lest</div></div><div class="ex-input-block"><div class="input-label">kg lest</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-tractions" min="0" step="1"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-hypertrophie"></div><span class="section-label">Hypertrophie</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">a) Rowing pronation</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-rowing" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">b) Spider curl</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-curl" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name">a) Alternate DB shoulder press</div><div class="ex-sets">3 × 24</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-shoulderalt" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name">b) Lateral raise</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w3s2-lateral" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-cross"></div><span class="section-label">Cross Training · For Time</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="cross-block">
+        <div class="cross-title">For Time — 2 blocs</div>
+        <div class="cross-row"><div class="cross-ex">100 Burpees</div><div class="cross-vol">100 m row à chaque pause</div></div>
+        <div class="cross-row" style="color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;padding:6px 0;border:none;"><div>Repos 3 min</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtube.com/shorts/43rg7fBNP2w?si=xG1V3WZOybLDGcZ5" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">100 Dips ↗</a></div><div class="cross-vol">100 m row à chaque pause</div></div>
+      </div>
+      <div class="perf-note-block" style="border-top:1px solid var(--border);padding:10px 14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;width:90px;">Temps Bloc 1</div><input type="text" class="time-input" placeholder="mm:ss" data-key="w3s2-cross-t1" style="width:80px;"></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;width:90px;">Temps Bloc 2</div><input type="text" class="time-input" placeholder="mm:ss" data-key="w3s2-cross-t2" style="width:80px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w3s2-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── S4 J1 ─── -->
+<div class="panel" id="p-w4-s1">
+  <div class="prog-note"><strong>Semaine 4 · +7.5% vs S1.</strong> Dernière semaine du bloc — pousse les charges au maximum.</div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtube.com/shorts/ZR-TXOWNJsg?si=k-ADCMQFYTRfqUe4" target="_blank">Back squat iso max ↗</a></div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Back squat</div><div class="ex-sets">5 × 5</div><div class="target-chip">Cible S4 : 112–118 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s1-backsquat" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bulgarian Split squat</div><div class="ex-sets">3 × 5+5 — 5RM</div><div class="target-chip">Cible S4 : +7.5% vs S1</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s1-bulgarian" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-puissance"></div><span class="section-label">Puissance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Deadlift</div><div class="ex-sets">3 × 6 — 85–90% RM</div><div class="target-chip">Cible S4 : 140–150 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s1-deadlift" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) DB squat jump</div><div class="ex-sets">3 × 6</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s1-squatjump" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name"><a href="https://youtu.be/TqOP69uQIxk" target="_blank">Landmine lunges to knee up ↗</a></div><div class="ex-sets">3 × 6+6</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s1-landmine" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-renfo"></div><span class="section-label">Renfo</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">a) Calf extension</div><div class="ex-sets">3 × 10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset</div><div class="ex-name">b) Copenhagen plank</div><div class="ex-sets">3 × 10+10</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">OH sit up on GHD</div><div class="ex-sets">3 × 10</div></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w4s1-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── S4 J2 ─── -->
+<div class="panel" id="p-w4-s2">
+  <div class="prog-note"><strong>Semaine 4 · +7.5% vs S1.</strong></div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-force"></div><span class="section-label">Force</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press iso max</div><div class="ex-sets">3 × 6''</div></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Bench press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S4 : 91–97 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-benchpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Shoulder press</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S4 : 63–66 kg</div></div><div class="ex-input-block"><div class="input-label">kg réel</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-shoulderpress" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-name">Tractions</div><div class="ex-sets">4 × 5</div><div class="target-chip">Cible S4 : 13–15 kg lest</div></div><div class="ex-input-block"><div class="input-label">kg lest</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-tractions" min="0" step="1"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-hypertrophie"></div><span class="section-label">Hypertrophie</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">a) Rowing pronation</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-rowing" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset A</div><div class="ex-name">b) Spider curl</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-curl" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name">a) Alternate DB shoulder press</div><div class="ex-sets">3 × 24</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-shoulderalt" min="0" step="2.5"></div></div>
+      <div class="ex"><div class="ex-left"><div class="ex-super">Superset B</div><div class="ex-name">b) Lateral raise</div><div class="ex-sets">3 × 12</div></div><div class="ex-input-block"><div class="input-label">kg</div><input type="number" class="perf-input" placeholder="—" data-key="w4s2-lateral" min="0" step="2.5"></div></div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-cross"></div><span class="section-label">Cross Training · For Time</span><span class="section-chevron">▼</span></div>
+    <div class="section-body">
+      <div class="cross-block">
+        <div class="cross-title">For Time — 2 blocs</div>
+        <div class="cross-row"><div class="cross-ex">100 Burpees</div><div class="cross-vol">100 m row à chaque pause</div></div>
+        <div class="cross-row" style="color:var(--muted);font-family:'Space Mono',monospace;font-size:10px;padding:6px 0;border:none;"><div>Repos 3 min</div></div>
+        <div class="cross-row"><div class="cross-ex"><a href="https://youtube.com/shorts/43rg7fBNP2w" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--border2)">100 Dips ↗</a></div><div class="cross-vol">100 m row à chaque pause</div></div>
+      </div>
+      <div class="perf-note-block" style="border-top:1px solid var(--border);padding:10px 14px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;width:90px;">Temps Bloc 1</div><input type="text" class="time-input" placeholder="mm:ss" data-key="w4s2-cross-t1" style="width:80px;"></div>
+        <div style="display:flex;align-items:center;gap:10px;"><div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;width:90px;">Temps Bloc 2</div><input type="text" class="time-input" placeholder="mm:ss" data-key="w4s2-cross-t2" style="width:80px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="section open"><div class="section-header" onclick="tog(this)"><div class="section-dot dot-mob"></div><span class="section-label">Notes de séance</span><span class="section-chevron">▼</span></div>
+    <div class="section-body"><div class="perf-note-block"><textarea class="perf-note" placeholder="Sensations, RPE, observations…" data-key="w4s2-notes" rows="3"></textarea></div></div>
+  </div>
+</div>
+
+<!-- ─── SUIVI ─── -->
+<div class="panel" id="p-w0-s1" style="display:none">
+  <div class="suivi-intro">
+    Toutes les performances saisies dans les séances apparaissent automatiquement ici.<br>
+    Visualise ta progression semaine par semaine sur chaque exercice de force.
+  </div>
+
+  <div class="suivi-section-title">Back squat — 5 × 5</div>
+  <div class="suivi-grid" id="suivi-backsquat"></div>
+
+  <div class="suivi-section-title">Deadlift — 3 × 6</div>
+  <div class="suivi-grid" id="suivi-deadlift"></div>
+
+  <div class="suivi-section-title">Bench press — 4 × 5</div>
+  <div class="suivi-grid" id="suivi-benchpress"></div>
+
+  <div class="suivi-section-title">Shoulder press — 4 × 5</div>
+  <div class="suivi-grid" id="suivi-shoulderpress"></div>
+
+  <div class="suivi-section-title">Tractions (lest) — 4 × 5</div>
+  <div class="suivi-grid" id="suivi-tractions"></div>
+
+  <div class="suivi-section-title">Bulgarian split squat — 3 × 5</div>
+  <div class="suivi-grid" id="suivi-bulgarian"></div>
+
+  <div class="suivi-section-title">Cross Training — Temps</div>
+  <div class="suivi-card" style="margin-bottom:20px;">
+    <div class="suivi-card-name">For Time · Skierg / Snatch / Carry</div>
+    <div class="suivi-rows" style="grid-template-columns:repeat(2,1fr);">
+      <div class="suivi-cell"><div class="suivi-cell-label">S1</div><div class="suivi-cell-val" id="suivi-cross-w1">—</div></div>
+      <div class="suivi-cell"><div class="suivi-cell-label">S2</div><div class="suivi-cell-val" id="suivi-cross-w2">—</div></div>
+    </div>
+  </div>
+  <div class="suivi-card" style="margin-bottom:20px;">
+    <div class="suivi-card-name">For Time · Burpees + Dips</div>
+    <div class="suivi-rows" style="grid-template-columns:repeat(4,1fr);">
+      <div class="suivi-cell"><div class="suivi-cell-label">S3 Bloc1</div><div class="suivi-cell-val" id="suivi-cross-w3t1">—</div></div>
+      <div class="suivi-cell"><div class="suivi-cell-label">S3 Bloc2</div><div class="suivi-cell-val" id="suivi-cross-w3t2">—</div></div>
+      <div class="suivi-cell"><div class="suivi-cell-label">S4 Bloc1</div><div class="suivi-cell-val" id="suivi-cross-w4t1">—</div></div>
+      <div class="suivi-cell"><div class="suivi-cell-label">S4 Bloc2</div><div class="suivi-cell-val" id="suivi-cross-w4t2">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <button class="btn btn-save" onclick="saveAll()">Enregistrer</button>
+  <button class="btn btn-export" onclick="exportAll()">Exporter &amp; Partager</button>
+  <button class="btn btn-import" onclick="importAll()">Importer</button>
+  <div class="save-indicator">
+    <div class="save-dot" id="sdot"></div>
+    <span id="slabel">—</span>
+  </div>
+</div>
+
+<script>
+const STORE = 'bloc2_laurent_v1';
+let currentWeek = 1;
+let currentSession = 1;
+
+// ── track
+const FORCE_KEYS = {
+  backsquat:     {keys:['w1s1-backsquat','w2s1-backsquat','w3s1-backsquat','w4s1-backsquat'], targets:['104–108','107–111','110–115','112–118'], unit:'kg'},
+  deadlift:      {keys:['w1s1-deadlift','w2s1-deadlift','w3s1-deadlift','w4s1-deadlift'], targets:['130–138','133–141','136–145','140–150'], unit:'kg'},
+  benchpress:    {keys:['w1s2-benchpress','w2s2-benchpress','w3s2-benchpress','w4s2-benchpress'], targets:['85–90','87–92','89–95','91–97'], unit:'kg'},
+  shoulderpress: {keys:['w1s2-shoulderpress','w2s2-shoulderpress','w3s2-shoulderpress','w4s2-shoulderpress'], targets:['57–60','59–62','61–64','63–66'], unit:'kg'},
+  tractions:     {keys:['w1s2-tractions','w2s2-tractions','w3s2-tractions','w4s2-tractions'], targets:['10–12','11–13','12–14','13–15'], unit:'kg lest'},
+  bulgarian:     {keys:['w1s1-bulgarian','w2s1-bulgarian','w3s1-bulgarian','w4s1-bulgarian'], targets:['~32–35','~33–36','~35–38','~36–39'], unit:'kg'},
+};
+
+function getStore() { try { return JSON.parse(localStorage.getItem(STORE)||'{}'); } catch { return {}; } }
+function setStore(d) { localStorage.setItem(STORE, JSON.stringify(d)); }
+
+function panelId(w, s) {
+  if (w === 0) return 'p-w0-s1';
+  return `p-w${w}-s${s}`;
+}
+
+function setWeek(w, btn) {
+  currentWeek = w;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const sessNav = document.getElementById('nav-sessions');
+  if (w === 0) {
+    sessNav.style.display = 'none';
+    showPanel(0, 1);
+  } else {
+    sessNav.style.display = 'flex';
+    showPanel(w, currentSession);
+  }
+  updateTopLabel();
+}
+
+function setSession(s, btn) {
+  currentSession = s;
+  document.querySelectorAll('.sess-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showPanel(currentWeek, s);
+  updateTopLabel();
+}
+
+function showPanel(w, s) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  const id = panelId(w, s);
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'block'; el.classList.add('active'); }
+  if (w === 0) buildSuivi();
+}
+
+function updateTopLabel() {
+  const lbl = document.getElementById('top-session-label');
+  if (currentWeek === 0) { lbl.textContent = 'SUIVI'; return; }
+  lbl.textContent = `S${currentWeek} · J${currentSession}`;
+}
+
+function tog(hd) { hd.closest('.section').classList.toggle('open'); }
+
+// ── Save
+function saveAll() {
+  const data = getStore();
+  document.querySelectorAll('[data-key]').forEach(el => {
+    if (el.value !== '') data[el.dataset.key] = el.value;
+    else delete data[el.dataset.key];
+  });
+  setStore(data);
+  flashSave();
+  buildSuivi();
+}
+
+function flashSave() {
+  const dot = document.getElementById('sdot');
+  const lbl = document.getElementById('slabel');
+  dot.classList.add('saved'); lbl.textContent = 'Enregistré ✓';
+  setTimeout(() => { dot.classList.remove('saved'); lbl.textContent = '—'; }, 2500);
+}
+
+// ── Load
+function loadAll() {
+  const data = getStore();
+  document.querySelectorAll('[data-key]').forEach(el => {
+    if (el.dataset.key && data[el.dataset.key] !== undefined) {
+      el.value = data[el.dataset.key];
+      el.classList.add('has-val');
+    }
+  });
+  buildSuivi();
+}
+
+// ── Auto-save + auto-sync on every input
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!el.dataset || !el.dataset.key) return;
+  el.classList.toggle('has-val', el.value !== '');
+  const data = getStore();
+  if (el.value !== '') data[el.dataset.key] = el.value;
+  else delete data[el.dataset.key];
+  setStore(data);
+  buildSuivi();
+});
+
+// ── 1RM estimate: Epley formula for 5 reps → weight × (1 + 5/30) = weight × 1.1667
+function calc1RM(weight, reps) {
+  if (!weight || isNaN(weight)) return null;
+  const rm = parseFloat(weight) * (1 + reps / 30);
+  return Math.round(rm * 2) / 2; // round to nearest 0.5
+}
+
+// Reps used per exercise for 1RM calculation
+const FORCE_REPS = { backsquat: 5, deadlift: 6, benchpress: 5, shoulderpress: 5, tractions: 5, bulgarian: 5 };
+
+// ── Build suivi panel
+function buildSuivi() {
+  const data = getStore();
+
+  Object.entries(FORCE_KEYS).forEach(([exKey, ex]) => {
+    const grid = document.getElementById(`suivi-${exKey}`);
+    if (!grid) return;
+    grid.innerHTML = '';
+    const reps = FORCE_REPS[exKey] || 5;
+
+    // Top row: actual weights
+    const card = document.createElement('div');
+    card.className = 'suivi-card';
+
+    // Header row
+    let html = '<div class="suivi-rows">';
+    ex.keys.forEach((k, i) => {
+      const val = data[k] || '';
+      const targetVal = ex.targets[i];
+      html += `<div class="suivi-cell">
+        <div class="suivi-cell-label">Sem. ${i+1}</div>
+        <div class="suivi-cell-val ${val?'':'empty'}">${val ? val + ' <span style="font-size:10px;font-weight:400;color:var(--muted)">' + ex.unit + '</span>' : '—'}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--faint);margin-top:2px;">cible ${targetVal}</div>
+      </div>`;
+    });
+    html += '</div>';
+
+    // 1RM row
+    html += `<div style="border-top:1px solid var(--border);background:rgba(245,166,35,0.04);">
+      <div class="suivi-rows">`;
+    let has1RM = false;
+    ex.keys.forEach((k, i) => {
+      const val = data[k];
+      const rm = calc1RM(val, reps);
+      if (rm) has1RM = true;
+      html += `<div class="suivi-cell">
+        <div class="suivi-cell-label" style="color:var(--force)">1RM S${i+1}</div>
+        <div class="suivi-cell-val" style="${rm ? 'color:var(--force);font-size:13px' : 'color:var(--faint);font-size:11px;font-weight:400'}">${rm ? rm + ' <span style="font-size:9px;font-weight:400;color:var(--muted)">kg</span>' : '—'}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+
+    card.innerHTML = html;
+    grid.appendChild(card);
+  });
+
+  // cross times
+  const crossMap = {
+    'suivi-cross-w1': 'w1s2-cross-time',
+    'suivi-cross-w2': 'w2s2-cross-time',
+    'suivi-cross-w3t1': 'w3s2-cross-t1',
+    'suivi-cross-w3t2': 'w3s2-cross-t2',
+    'suivi-cross-w4t1': 'w4s2-cross-t1',
+    'suivi-cross-w4t2': 'w4s2-cross-t2',
+  };
+  Object.entries(crossMap).forEach(([elId, dataKey]) => {
+    const el = document.getElementById(elId);
+    if (el) {
+      const v = data[dataKey];
+      el.textContent = v || '—';
+      el.className = 'suivi-cell-val' + (v ? '' : ' empty');
+    }
+  });
+}
+
+// ── Export self-contained HTML
+function exportAll() {
+  saveAll();
+  const data = getStore();
+  let html = document.documentElement.outerHTML;
+  const inject = `<script>(function(){localStorage.setItem('${STORE}',JSON.stringify(${JSON.stringify(data)}));})();<\/script>`;
+  html = html.replace('</body>', inject + '\n</body>');
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'bloc2-laurent-partage.html'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Import
+function importAll() {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json,.html';
+  inp.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        let data;
+        if (file.name.endsWith('.json')) {
+          data = JSON.parse(ev.target.result);
+        } else {
+          const m = ev.target.result.match(/localStorage\.setItem\('[^']+',JSON\.stringify\((\{.*?\})\)\)/s);
+          if (m) data = JSON.parse(m[1]);
+          else throw new Error();
+        }
+        setStore(data);
+        loadAll();
+        alert('Données importées.');
+      } catch { alert('Fichier invalide.'); }
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+// ── Init
+loadAll();
+updateTopLabel();
+</script>
+</body>
+</html>
